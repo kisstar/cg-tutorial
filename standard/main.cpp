@@ -2,6 +2,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "shader.cpp"
+#include "data.cpp"
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -53,6 +56,10 @@ int main()
     // 告诉 GLFW 我们希望每当窗口调整大小的时候调用这个函数
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    // 创建并编译着色器程序
+    int shaderProgram = createProgram(vertexString, fragString);
+    int VAO = createVAO();
+
     // 渲染循环
     while (!glfwWindowShouldClose(window)) // 检查一次 GLFW 是否被要求退出
     {
@@ -62,6 +69,10 @@ int main()
         // 渲染指令
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        CHECK_GL(glUseProgram(shaderProgram));
+        glBindVertexArray(VAO);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // 检查并调用事件，交换缓冲
         glfwSwapBuffers(window); // 交换颜色缓冲
