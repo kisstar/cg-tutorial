@@ -3,10 +3,11 @@
 int createVAO()
 {
     float vertices[] = {
-        0.5f, 0.5f, 0.0f,   // 右上角
-        0.5f, -0.5f, 0.0f,  // 右下角
-        -0.5f, -0.5f, 0.0f, // 左下角
-        -0.5f, 0.5f, 0.0f   // 左上角
+        // ---- 位置 ----  ---- 颜色 ----    - 纹理坐标 -
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // 右上
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // 右下
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 左下
+        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // 左上
     };
     unsigned int indices[] = {
         0, 1, 3, // 第一个三角形
@@ -39,10 +40,18 @@ int createVAO()
                           3 /* 顶点属性的大小 */,
                           GL_FLOAT /* 数据的类型 */,
                           GL_FALSE /* 是否标准化 */,
-                          3 * sizeof(float) /* 步长 */,
+                          8 * sizeof(float) /* 步长 */,
                           (void *)0 /* 位置数据在缓冲中起始位置的偏移量 */);
     // 启用顶点属性
     glEnableVertexAttribArray(0);
+
+    // color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    // texture coord attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0); // 解除绑定的顶点缓冲区对象
     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // 当 VAO 是活动的时，不解除对 EBO 的绑定
 

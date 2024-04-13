@@ -4,6 +4,7 @@
 
 #include "shader.cpp"
 #include "data.cpp"
+#include "texture.cpp"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
@@ -59,6 +60,8 @@ int main()
     // 创建并编译着色器程序
     int shaderProgram = createProgram(vertexString, fragString);
     int VAO = createVAO();
+    stbi_set_flip_vertically_on_load(true); // 翻转Y轴
+    int texture = createTexture("static-resources/container.jpeg", false);
 
     // 渲染循环
     while (!glfwWindowShouldClose(window)) // 检查一次 GLFW 是否被要求退出
@@ -69,6 +72,7 @@ int main()
         // 渲染指令
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glBindTexture(GL_TEXTURE_2D, texture);
         CHECK_GL(glUseProgram(shaderProgram));
         glBindVertexArray(VAO);
         // glDrawArrays(GL_TRIANGLES, 0, 3);

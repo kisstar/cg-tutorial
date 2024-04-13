@@ -35,8 +35,16 @@
 const std::string vertexString = SHADER_STRING(
     // 设定了输入变量的位置值
     layout(location = 0) in vec3 aPos;
+    layout(location = 1) in vec3 aColor;
+    layout(location = 2) in vec2 aTexCoord;
+
+    out vec3 ourColor;
+    out vec2 TexCoord;
 
     void main() {
+        ourColor = aColor;
+        TexCoord = aTexCoord;
+
         // 为了设置顶点着色器的输出，我们必须把位置数据赋值给预定义的 gl_Position 变量，它在幕后是 vec4 类型的
         // 在真实的程序里输入数据通常都不是标准化设备坐标，所以我们首先必须先把它们转换至 OpenGL 的可视区域内
         gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
@@ -46,8 +54,13 @@ const std::string fragString = SHADER_STRING(
     // 片段着色器只需要一个输出变量，这个变量是一个 4 分量向量，它表示的是最终的输出颜色
     out vec4 FragColor;
 
+    in vec3 ourColor;
+    in vec2 TexCoord;
+
+    uniform sampler2D ourTexture;
+
     void main() {
-        FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+        FragColor = texture(ourTexture, TexCoord) * vec4(ourColor, 1.0);
     });
 
 int createProgram(const std::string &vertexSource, const std::string &fragmentSource)

@@ -10,16 +10,19 @@ project(
 # want to keep this main file easy to read).
 include(${PROJECT_SOURCE_DIR}/../utils.cmake)
 
+include_directories(${PROJECT_SOURCE_DIR}/../third-party/stb/include)
 include_directories(${PROJECT_SOURCE_DIR}/../third-party/glfw/include)
 include_directories(${PROJECT_SOURCE_DIR}/../third-party/glad/include)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # Create the App executable target with one source file
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/../third-party/stb/src STB_SRC_LIST)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../third-party/glfw/lib-x86_64)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/../third-party/glad/src GLAD_SRC_LIST)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC_LIST)
 
 add_executable(App
+	${STB_SRC_LIST}
 	${GLFW_SRC_LIST}
 	${GLAD_SRC_LIST}
 	${SRC_LIST}
