@@ -10,6 +10,7 @@ project(
 # want to keep this main file easy to read).
 include(${PROJECT_SOURCE_DIR}/../utils.cmake)
 
+include_directories(${PROJECT_SOURCE_DIR}/../third-party/glm)
 include_directories(${PROJECT_SOURCE_DIR}/../third-party/stb/include)
 include_directories(${PROJECT_SOURCE_DIR}/../third-party/glfw/include)
 include_directories(${PROJECT_SOURCE_DIR}/../third-party/glad/include)

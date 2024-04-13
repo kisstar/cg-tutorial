@@ -41,13 +41,13 @@ const std::string vertexString = SHADER_STRING(
     out vec3 ourColor;
     out vec2 TexCoord;
 
+    uniform mat4 transform;
+
     void main() {
         ourColor = aColor;
-        TexCoord = aTexCoord;
 
-        // 为了设置顶点着色器的输出，我们必须把位置数据赋值给预定义的 gl_Position 变量，它在幕后是 vec4 类型的
-        // 在真实的程序里输入数据通常都不是标准化设备坐标，所以我们首先必须先把它们转换至 OpenGL 的可视区域内
-        gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+        gl_Position = transform * vec4(aPos, 1.0f);
+        TexCoord = vec2(aTexCoord.x, aTexCoord.y);
     });
 
 const std::string fragString = SHADER_STRING(

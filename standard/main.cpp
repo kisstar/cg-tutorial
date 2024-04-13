@@ -5,6 +5,7 @@
 #include "shader.cpp"
 #include "data.cpp"
 #include "texture.cpp"
+#include "transform.cpp"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
@@ -74,6 +75,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
         glBindTexture(GL_TEXTURE_2D, texture);
         CHECK_GL(glUseProgram(shaderProgram));
+        transform(shaderProgram);
         glBindVertexArray(VAO);
         // glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
