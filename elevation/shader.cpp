@@ -35,32 +35,29 @@
 const std::string vertexString = SHADER_STRING(
     // 设定了输入变量的位置值
     layout(location = 0) in vec3 aPos;
-    layout(location = 1) in vec3 aColor;
-    layout(location = 2) in vec2 aTexCoord;
+    layout(location = 1) in vec2 aTexCoord;
 
-    out vec3 ourColor;
     out vec2 TexCoord;
 
-    uniform mat4 transform;
+    uniform mat4 model;
+    uniform mat4 view;
+    uniform mat4 projection;
 
     void main() {
-        ourColor = aColor;
-
-        gl_Position = transform * vec4(aPos, 1.0f);
-        TexCoord = vec2(aTexCoord.x, aTexCoord.y);
+        gl_Position = projection * view * model * vec4(aPos, 1.0f);
+        TexCoord = vec2(aTexCoord.x, 1.0 - aTexCoord.y);
     });
 
 const std::string fragString = SHADER_STRING(
     // 片段着色器只需要一个输出变量，这个变量是一个 4 分量向量，它表示的是最终的输出颜色
     out vec4 FragColor;
 
-    in vec3 ourColor;
     in vec2 TexCoord;
 
     uniform sampler2D ourTexture;
 
     void main() {
-        FragColor = texture(ourTexture, TexCoord) * vec4(ourColor, 1.0);
+        FragColor = texture(ourTexture, TexCoord);
     });
 
 int createProgram(const std::string &vertexSource, const std::string &fragmentSource)

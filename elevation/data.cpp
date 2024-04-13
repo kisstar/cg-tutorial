@@ -1,25 +1,11 @@
 #include <glad/glad.h>
+#include "cube.cpp"
 
 int createVAO()
 {
-    float vertices[] = {
-        // ---- 位置 ----  ---- 颜色 ----    - 纹理坐标 -
-        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // 右上
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // 右下
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 左下
-        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // 左上
-    };
-    unsigned int indices[] = {
-        0, 1, 3, // 第一个三角形
-        1, 2, 3  // 第二个三角形
-    };
-
     // 生成一个 VBO 对象
     unsigned int VBO;
     glGenBuffers(1, &VBO);
-    // 生成一个 EBO 对象
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
     // 生成一个 VAO 对象
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -29,9 +15,6 @@ int createVAO()
     // 通过 VAO，当配置顶点属性指针时，你只需要将那些调用执行一次，之后再绘制物体的时候只需要绑定相应的 VAO 即可
     glBindVertexArray(VAO);
 
-    // 绑定缓冲类型（此处是元素缓冲区对象），把索引数据复制到缓冲的内存中
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // 绑定缓冲类型（此处是顶点缓冲对象），把顶点数据复制到缓冲的内存中
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -40,17 +23,14 @@ int createVAO()
                           3 /* 顶点属性的大小 */,
                           GL_FLOAT /* 数据的类型 */,
                           GL_FALSE /* 是否标准化 */,
-                          8 * sizeof(float) /* 步长 */,
+                          5 * sizeof(float) /* 步长 */,
                           (void *)0 /* 位置数据在缓冲中起始位置的偏移量 */);
     // 启用顶点属性
     glEnableVertexAttribArray(0);
 
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
     // texture coord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0); // 解除绑定的顶点缓冲区对象
     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // 当 VAO 是活动的时，不解除对 EBO 的绑定

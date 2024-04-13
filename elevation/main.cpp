@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "constant.cpp"
 #include "shader.cpp"
 #include "data.cpp"
 #include "texture.cpp"
@@ -54,7 +55,7 @@ int main()
     }
 
     // 告诉 OpenGL 渲染窗口的尺寸大小，即视口
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, screenWidth, screenHeight);
     // 告诉 GLFW 我们希望每当窗口调整大小的时候调用这个函数
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -63,6 +64,7 @@ int main()
     int VAO = createVAO();
     stbi_set_flip_vertically_on_load(true); // 翻转Y轴
     int texture = createTexture("static-resources/container.jpeg", false);
+    glEnable(GL_DEPTH_TEST);
 
     // 渲染循环
     while (!glfwWindowShouldClose(window)) // 检查一次 GLFW 是否被要求退出
@@ -72,14 +74,15 @@ int main()
 
         // 渲染指令
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindTexture(GL_TEXTURE_2D, texture);
         CHECK_GL(glUseProgram(shaderProgram));
-        transform(shaderProgram);
         glBindVertexArray(VAO);
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+        for (unsigned int i = 0; i < 10; i++)
+        {
+            transform(shaderProgram, i);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
         // 检查并调用事件，交换缓冲
         glfwSwapBuffers(window); // 交换颜色缓冲
         glfwPollEvents();        // 函数检查有没有触发什么事件、更新窗口状态，并调用对应的回调函数
