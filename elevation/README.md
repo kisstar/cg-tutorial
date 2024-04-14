@@ -1,3 +1,3 @@
-# standard
+# elevation
 
-一个标准的渲染程序。
+一个 3D 的渲染程序。

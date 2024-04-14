@@ -8,6 +8,44 @@
 #include "texture.cpp"
 #include "transform.cpp"
 
+bool firstMouse = true;
+float lastX = 400, lastY = 300;
+float yaw = -90.0f;
+float pitch = 0.0f;
+
+void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.05;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(front);
+}
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -58,6 +96,10 @@ int main()
     glViewport(0, 0, screenWidth, screenHeight);
     // 告诉 GLFW 我们希望每当窗口调整大小的时候调用这个函数
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    // 隐藏光标，并捕捉它
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // 监听鼠标移动事件
+    glfwSetCursorPosCallback(window, mouse_callback);
 
     // 创建并编译着色器程序
     int shaderProgram = createProgram(vertexString, fragString);
