@@ -12,6 +12,17 @@ bool firstMouse = true;
 float lastX = 400, lastY = 300;
 float yaw = -90.0f;
 float pitch = 0.0f;
+float fov   =  45.0f;
+
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+{
+    if (fov >= 1.0f && fov <= 45.0f)
+        fov -= yoffset;
+    if (fov <= 1.0f)
+        fov = 1.0f;
+    if (fov >= 45.0f)
+        fov = 45.0f;
+}
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
 {
@@ -100,6 +111,8 @@ int main()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // 监听鼠标移动事件
     glfwSetCursorPosCallback(window, mouse_callback);
+    // 监听滚轮滚动事件
+    glfwSetScrollCallback(window, scroll_callback);
 
     // 创建并编译着色器程序
     int shaderProgram = createProgram(vertexString, fragString);
@@ -122,7 +135,7 @@ int main()
         glBindVertexArray(VAO);
         for (unsigned int i = 0; i < 10; i++)
         {
-            transform(shaderProgram, i);
+            transform(shaderProgram, i, fov);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
         // 检查并调用事件，交换缓冲
